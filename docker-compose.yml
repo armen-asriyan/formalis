@@ -1,0 +1,50 @@
+services:
+  node-app:
+    build: ./node-app
+    container_name: node-app
+    restart: always
+    env_file:
+      - ./node-app/.env
+    depends_on:
+      - db
+    networks:
+      - formalis-network
+    expose:
+      - "3000"
+    volumes:
+      - ./node-app:/usr/src/app
+
+  db:
+    image: mysql:8
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: formalis_db
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - formalis-network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - node-app
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - formalis-network
+
+volumes:
+  db_data:
+
+networks:
+  formalis-network:
+    driver: bridge
