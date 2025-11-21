@@ -1,0 +1,36 @@
+# Node
+node_modules/
+npm-debug.log
+.env
+.env.local
+.env.*.local
+
+# Build / runtime 
+dist/
+build/
+tmp/
+*.log
+
+# Docker
+docker-compose.override.yml
+docker-compose.*.yml
+**/Dockerfile.dev
+
+# Certs
+*.crt
+*.key
+/etc/letsencrypt/
+
+# Database / backup dumps
+*.sql
+*.sqlite
+dump/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local config
+localsettings.json
